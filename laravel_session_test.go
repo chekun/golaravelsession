@@ -1,4 +1,4 @@
-package gols
+package golaravelsession
 
 import (
 	"testing"
