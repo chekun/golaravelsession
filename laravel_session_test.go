@@ -19,7 +19,23 @@ func TestGetSessionID(t *testing.T) {
 	} else {
 		t.Error("fail")
 	}
+}
 
+func TestGetSessionIDWithoutSerialization(t *testing.T) {
+	cookie := "eyJpdiI6IlwvVjl1MTBpbGxpMUwxdEZsemRZV0Z3PT0iLCJ2YWx1ZSI6IjZRTlV0cjNTK1NlQ2NkTTAxSUF3VExKSXAra3VRS3RRV0JCaHBvc1lNNkNFVzliY1k1WUlndVJCT09RNENvdnciLCJtYWMiOiIzZTMyYmVkODcwZmVjNjBhZjY1MjkxYWQyZGRiNWMxMTg4ODJlZmNkOTJmZmUxMDcwNWYwYjMzZTY0NzM4ZjUxIn0="
+	key := "base64:qsDvCdhT+JPXEBD3ys/XraOXVNpshsyElzJmtgnBqEI="
+	expectedSessionID := "uJUzLDZDWUq48O1RWVUbgWDUeQ1vJz5YQdgbQaDO"
+
+	sessionID, err := GetSessionID(cookie, key)
+	if err != nil {
+		t.Errorf("fail - %s", err)
+	}
+
+	if sessionID == expectedSessionID {
+		t.Log("ok")
+	} else {
+		t.Error("fail")
+	}
 }
 
 func TestParseSessionData(t *testing.T) {

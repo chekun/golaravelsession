@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	"strings"
 
@@ -59,10 +58,18 @@ func GetSessionID(cookie, key string) (string, error) {
 	unserializer := php_serialize.NewUnSerializer(string(encryptedText))
 	var sessionID php_serialize.PhpValue
 	if sessionID, err = unserializer.Decode(); err != nil {
-		return "", fmt.Errorf("unserialize data error, raw value is %s", string(encryptedText))
+		// laravel > 5.5.40 or 5.6.29 session keys will not be serialized
+		// https://github.com/laravel/framework/pull/25121
+		return string(removePadding(encryptedText)), nil
 	}
 
 	return sessionID.(string), nil
+}
+
+func removePadding(src []byte) []byte {
+	length := len(src)
+	unpadding := int(src[length-1])
+	return src[:(length - unpadding)]
 }
 
 //ParseSessionData Parse session data into readable golang struct
