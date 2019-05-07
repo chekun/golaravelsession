@@ -52,3 +52,18 @@ func TestParseSessionData(t *testing.T) {
 		t.Error("fail")
 	}
 }
+
+func TestParseSessionDataWithDoubleSerialization(t *testing.T) {
+	sessionData := `s:267:"a:5:{s:6:"_token";s:40:"eE5gVNqGSn6wneCJAzhtTMulPFwvOfDyZRSoVStA";s:3:"url";a:0:{}s:9:"_previous";a:1:{s:3:"url";s:29:"https://jshb-admin.dev/update";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}s:52:"login_admin_59ba36addc2b2f9401580f014c7f58ea4e30989d";i:1;}";`
+	session, err := ParseSessionData(sessionData)
+
+	if err != nil {
+		t.Errorf("fail - %s", err)
+	}
+
+	if session["_token"].(string) == "eE5gVNqGSn6wneCJAzhtTMulPFwvOfDyZRSoVStA" {
+		t.Log("ok")
+	} else {
+		t.Error("fail")
+	}
+}
