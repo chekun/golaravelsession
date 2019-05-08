@@ -79,5 +79,13 @@ func ParseSessionData(data string) (php_serialize.PhpArray, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Some cache-based session stores such as redis result in double
+	// serialization of session data. If the session data is a string
+	// then this has almost certainly happened.
+	if sessionDataDecodedString, ok := sessionDataDecoded.(string); ok {
+		return ParseSessionData(sessionDataDecodedString)
+	}
+
 	return sessionDataDecoded.(php_serialize.PhpArray), nil
 }
